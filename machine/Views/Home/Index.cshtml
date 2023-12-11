@@ -1,0 +1,132 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Demo</title>
+    <style>
+
+        p.outputtext {
+            position: fixed;
+            top: 1px;
+            left: 520px;
+            width: 200px;
+            font-size: 28px;
+        }
+
+        #outputmachine {
+            border: 1px solid #000;
+            position: absolute;
+            top: 60px;
+            left: 200px;
+            width: 2000px;
+            height: 900px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        #fileContainer {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 20px 0 40px 0;
+            width: 150px;
+            border-left: 1px solid #ddd;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        
+    </style>
+   
+</head>
+<body>
+    <p class="outputtext">異常分析輸出圖片</p>
+    <button onclick="importExcel()">匯入excel</button>
+    <button id="uploadButton" >上傳資料</button>
+    <button id="lineChartButton" > 繪製折線圖</button>
+    <div id="fileContainer">
+
+        <h2> 輸入資料:</h2>
+        <div id="fileBox">
+            <p id="fileName"></p>
+            <p id="filesqlserver"></p>
+            <p id="filesqldatabase"></p>
+            <p id="filesqlusername"></p>
+            <p id="filesqlpassword"></p>
+        </div>
+        <button onclick="deletData()">刪除資料</button>
+    </div>
+    <div id="outputmachine">
+        <canvas id="lineChart"></canvas>
+    </div>
+    <script>
+
+        function importExcel() {
+            var fileInput = document.createElement("input");
+            fileInput.type = "file";
+
+            fileInput.addEventListener("change", function (event) {
+                console.log('File input changed!');
+                var file = event.target.files[0];
+                console.log("Selected file:", file);
+                //匯入excel
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var data = e.target.result;
+                        Papa.parse(data, {
+                            header: true,
+                            dynamicTyping: true,
+                            complete: function (results) {
+                                var excelData = results.data;
+                        console.log(excelData);
+                        //將csv轉換json
+                        var fileBox = document.getElementById("fileBox");
+                                fileBox.dataset.excelData = JSON.stringify(excelData);
+                        //將json存入fileBox
+                        showFileBox(file);
+                            }
+                        });
+                    };
+
+                    reader.readAsBinaryString(file);
+                } else {
+                    showPopup("No File yo ");
+                }
+            });
+
+           fileInput.click();
+        }
+        function showFileBox(file) {
+
+            document.getElementById("fileBox").style.display = "block";
+            document.getElementById("fileName").innerText = file.name;
+        }
+
+        function deletData() {
+            var fileBox = document.getElementById("fileBox");
+            fileBox.innerHTML = "";
+            var outputmachine = document.getElementById("outputmachine")
+            outputmachine.innerHTML = "";
+        }
+
+
+
+    </script>
+    <script defer src="/js/upload.js"> </script>
+    <script defer src="/js/line-chart.js"> </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</body>
+</html>

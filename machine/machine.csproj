@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\upload.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="python" Version="3.12.0" />
+    <PackageReference Include="pythonnet" Version="3.0.3" />
+  </ItemGroup>
+
+</Project>
